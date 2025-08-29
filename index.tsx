@@ -49,6 +49,7 @@ const MOCK_HOMEWORK: Homework[] = [
   { id: 101, teacherId: 1, subject: 'คณิตศาสตร์', details: 'ทำแบบฝึกหัด 1-10 ในหน้า 52 ของหนังสือเรียน', dueDate: '2024-08-15', createdAt: '2024-08-01', attachment: 'worksheet.pdf' },
   { id: 102, teacherId: 1, subject: 'ประวัติศาสตร์', details: 'เขียนเรียงความ 500 คำเกี่ยวกับการปฏิวัติอุตสาหกรรม', dueDate: '2024-08-20', createdAt: '2024-08-05' },
   { id: 103, teacherId: 1, subject: 'วิทยาศาสตร์', details: 'วาดแผนภาพวัฏจักรของน้ำและติดฉลากทุกส่วน', dueDate: '2024-08-25', createdAt: '2024-08-10' },
+  { id: 104, teacherId: 1, subject: 'เขียนสูตร VBA', details: 'เขียนสูตร VBA เพื่อรวม Sheet ให้มารวมกันเหมือนตัวอย่าง', dueDate: '2025-08-31', createdAt: '2024-08-12' },
 ];
 
 const MOCK_READ_STATUS: ReadStatus[] = [
@@ -61,6 +62,7 @@ const MOCK_READ_STATUS: ReadStatus[] = [
   { homeworkId: 103, studentId: 2, read: false },
   { homeworkId: 103, studentId: 3, read: false },
   { homeworkId: 103, studentId: 4, read: false },
+  { homeworkId: 104, studentId: 2, read: false },
 ];
 
 const MOCK_SUBMISSIONS: Submission[] = [
@@ -756,6 +758,17 @@ const App = () => {
     });
   }, [currentUser, studentFilter, homework, submissions]);
   
+  const unreadCount = useMemo(() => {
+    if (!currentUser || currentUser.role !== 'student') {
+        return 0;
+    }
+    // An assignment is unread if its corresponding readStatus is not true.
+    return homework.filter(hw => {
+        const status = readStatuses.find(rs => rs.homeworkId === hw.id && rs.studentId === currentUser.id);
+        return !status || !status.read;
+    }).length;
+  }, [currentUser, homework, readStatuses]);
+
   if (!currentUser) {
     return <LoginScreen onLogin={handleLogin} />;
   }
@@ -767,7 +780,16 @@ const App = () => {
       <header className="app-header">
         <div className="container header-content">
           <div className="logo"><i className="fas fa-book-reader"></i> ระบบจัดการบ้าน</div>
-          <div className="user-info"><span>ยินดีต้อนรับ, {currentUser.name}</span><button onClick={handleLogout} className="btn btn-secondary">ออกจากระบบ</button></div>
+          <div className="user-info">
+            {currentUser.role === 'student' && unreadCount > 0 && (
+              <div className="header-notification">
+                  <i className="fas fa-bell"></i>
+                  <span className="notification-badge">{unreadCount}</span>
+              </div>
+            )}
+            <span>ยินดีต้อนรับ, {currentUser.name}</span>
+            <button onClick={handleLogout} className="btn btn-secondary">ออกจากระบบ</button>
+          </div>
         </div>
       </header>
       <main className="container">

@@ -161,10 +161,10 @@ body {
 .user-info {
   display: flex;
   align-items: center;
+  gap: 20px;
 }
 
 .user-info span {
-  margin-right: 20px;
   font-weight: 500;
 }
 
@@ -174,6 +174,30 @@ body {
 }
 .btn-secondary:hover {
   background: #dfe4ea;
+}
+
+.header-notification {
+    position: relative;
+    font-size: 22px;
+    color: var(--light-text-color);
+    cursor: pointer;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: var(--danger-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    border: 2px solid white;
 }
 
 .dashboard-header {
@@ -240,6 +264,7 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .homework-card.new { border-left-color: var(--danger-color); }
 .homework-card.read { border-left-color: var(--info-color); }
@@ -263,6 +288,7 @@ body {
 .card-header h3 {
   font-size: 20px;
   margin: 0;
+  padding-right: 60px; /* Space for the tag */
 }
 
 .status-tag {
@@ -272,6 +298,9 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   color: #fff;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .status-new { background-color: var(--danger-color); }
